@@ -1,19 +1,22 @@
-
 # Dataset notes
 
 ## CIFAR-10
 
-Used for the first guided notebook. It is loaded through `torchvision.datasets.CIFAR10`.
+Used in Notebook 1.
 
-CIFAR-10 is not industrial, but it is a convenient RGB classification dataset for learning the transfer-learning pipeline.
+- Source: TorchVision
+- Role: guided, non-industrial first transfer-learning exercise
+- Reason: small, RGB, stable, directly loadable through PyTorch/TorchVision
 
-## MVTec Capsule subset
+## MVTec Capsule teaching split
 
-Used for the second, industrially oriented notebook. It is loaded through Hugging Face dataset:
+Used in Notebook 2.
 
-`alexsu52/mvtec_capsule`
+- Source: Hugging Face dataset `alexsu52/mvtec_capsule`
+- Role: industrially motivated binary classification task
+- Labels: normal / abnormal
+- Important caveat: this is a supervised teaching split, not the official MVTec AD anomaly-detection benchmark protocol.
 
-This dataset is derived from the MVTec AD capsule category. Labels are normal / abnormal.
+## Why not the full MVTec AD dataset here?
 
-Teaching caveat:
-The original MVTec AD benchmark is intended for anomaly detection with defect-free training data. In this exercise, we create a supervised teaching split from the available examples so students can practice transfer learning for binary classification. This should not be presented as the official anomaly-detection protocol.
+The full MVTec AD dataset is excellent for the semester project, but it is too large and too protocol-specific for this first transfer-learning exercise. This exercise focuses on the pipeline and experimental thinking, not on official benchmark performance.

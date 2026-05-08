@@ -1,41 +1,67 @@
-
 # Teacher notes — Exercise 2
 
-## Learning goals
+## Session design
 
-Students should be able to:
-
-1. explain why preprocessing is part of the model contract;
-2. distinguish frozen feature extraction, partial fine-tuning, and full fine-tuning;
-3. adapt a pretrained CNN to a new number of classes;
-4. train a small transfer-learning baseline in PyTorch;
-5. read learning curves and confusion matrices;
-6. interpret results in terms of data, labels, augmentation, class imbalance, and industrial requirements.
-
-## Suggested 90-minute flow
+The exercise is designed for a 90-minute session:
 
 | Time | Activity |
 |---:|---|
-| 0–10 min | CNN intuition: convolution, channels, feature maps, pooling |
-| 10–20 min | Transfer learning strategies: frozen, partial, full |
-| 20–25 min | Notebook orientation and Binder check |
-| 25–55 min | Notebook 1: guided CIFAR-10 pipeline |
-| 55–80 min | Notebook 2: industrial MVTec Capsule task |
-| 80–90 min | Discussion: what changed, what failed, what would be industrially risky? |
+| 0–25 min | Short instructor introduction to CNNs and transfer learning |
+| 25–35 min | Students open Binder and inspect CIFAR-10 notebook |
+| 35–60 min | Guided CIFAR-10 baseline + first experiment |
+| 60–80 min | Industrial MVTec Capsule notebook |
+| 80–90 min | Discussion: what changed performance and why? |
 
-## Suggested baselines
+## Why training is longer now
 
-Use small settings to fit the exercise:
+One epoch is not enough for students to see stable learning behavior. The default settings are now:
 
-- CIFAR-10 subset: 1000–2000 train samples, 400–500 validation samples, 1 epoch.
-- Industrial MVTec Capsule subset: 160 train samples, 80 validation samples, 1 epoch.
+- CIFAR-10 frozen ResNet18: 3 epochs, with optional 4–5 epoch comparisons.
+- MVTec Capsule: 5 epochs baseline, with optional 8 epoch comparison.
 
-Students should focus on the workflow and interpretation, not on leaderboard performance.
+If the class is CPU-only and training is slow, students can use `max_batches_per_epoch`, but the default should train through all selected data.
 
-## Hidden factors to emphasize
+## Pin memory warning fix
 
-- Transfer learning does not remove the need for valid preprocessing.
-- Train/validation splits must respect data generation, batches, parts, and acquisition conditions.
-- Augmentations must be operationally plausible.
-- Accuracy can be misleading under imbalance.
-- Good baselines are diagnostic experiments, not final products.
+The data modules now set:
+
+```python
+pin_memory=torch.cuda.is_available()
+```
+
+This avoids the warning:
+
+```text
+'pin_memory' argument is set as true but no accelerator is found
+```
+
+on CPU-only machines. It keeps pinned memory active only when CUDA is available.
+
+## Suggested instructor emphasis
+
+Students should not only run cells. They should answer:
+
+- What did changing epochs do?
+- What did changing learning rate do?
+- What did augmentation do?
+- What did transfer strategy change?
+- Which model is best if runtime matters?
+- Which error type is more critical for industrial inspection?
+
+## Common student difficulties
+
+- Confusing “pretrained” with “already solved”.
+- Forgetting that ImageNet normalization is part of the model contract.
+- Using too high a learning rate for partial fine-tuning.
+- Comparing validation results from different datasets or splits without caution.
+- Treating accuracy as sufficient for the industrial binary task.
+- Ignoring false normals / false abnormals.
+
+## Optional challenge
+
+For fast groups:
+
+- run the same MVTec setting with and without augmentation,
+- enable class weights,
+- compare MobileNetV3-Small vs ResNet18,
+- inspect misclassified examples and write a failure taxonomy.

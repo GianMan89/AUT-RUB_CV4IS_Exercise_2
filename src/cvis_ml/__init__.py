@@ -1,6 +1,4 @@
-"""Utilities for CV4IS Exercise 2: transfer learning in PyTorch."""
-
 from .config import DatasetConfig, ModelConfig, TrainConfig, ExperimentConfig
-from .data import CIFAR10DataModule, MVTecCapsuleDataModule, DataBundle
-from .models import TransferModelFactory
-from .engine import Trainer, ExperimentResult
+from .data import CIFAR10DataModule, MVTecCapsuleDataModule, make_class_weights_from_counts, auto_pin_memory
+from .models import TransferModelFactory, count_parameters, describe_trainable_parameters
+from .engine import Trainer, run_transfer_experiment
